@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cgb.dao.UserMapper">
+
+    <insert id="addUser" parameterType="userLogin" useGeneratedKeys="true" keyProperty="id">
+        insert into user_login(name, account, password,create_time)
+        values (#{name},#{account},#{password},#{createTime})
+    </insert>
+    <resultMap id="roleMap" type="role">
+        <id property="id" column="r_id"></id>
+        <result property="name" column="r_name"></result>
+        <result property="createTime" column="r_create"></result>
+        <result property="updateTime" column="r_update"></result>
+        <result property="deleted" column="r_delete"></result>
+
+    </resultMap>
+    <resultMap id="userLoginMap" type="userLogin">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="account" column="account"></result>
+        <result property="password" column="password"></result>
+        <result property="email" column="email"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="deleted" column="is_deleted"></result>
+        <association property="role" javaType="role" column="r_id" resultMap="roleMap">
+        </association>
+    </resultMap>
+    <select id="isHaveUser1" parameterType="map" resultMap="userLoginMap">
+        select  u.id,u.name,u.account,u.password,u.email,u.create_time,u.update_time,u.is_deleted,
+                u.r_id 'r_id',r.name 'r_name',r.create_time 'r_create',r.update_time 'r_update',r.is_deleted 'r_delete'
+        from user_login u inner join role r on u.r_id = r.id
+        <where>
+            u.is_deleted=0
+            <if test="name!=null">and u.name=#{name}</if>
+            <if test="account!=null">and u.account=#{account}</if>
+        </where>
+    </select>
+
+    <select id="isHaveUser" parameterType="map" resultType="int">
+        select count(*) from user_login
+        <where>
+            is_deleted=0
+            <if test="name!=null">and name=#{name}</if>
+            <if test="account!=null">and account=#{account}</if>
+        </where>
+    </select>
+
+
+</mapper>
