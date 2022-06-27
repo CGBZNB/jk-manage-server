@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cgb.dao.ExamMapper">
+
+    <insert id="addExamAP" useGeneratedKeys="true" keyProperty="id" parameterType="map">
+        insert into examap(examtime, address, number,maked, type,uid)
+        values (#{examtime},#{address},#{number},#{number},#{type},#{uid})
+    </insert>
+
+    <update id="setExamAP">
+        update examap set maked=#{maked} where id=#{eid}
+    </update>
+    
+    <select id="getExamAP" parameterType="map" resultType="examAP">
+        select id,examtime,address,number,type,maked from examap
+        <where>
+            type =#{type}
+            <if test="examtime!=null">and examtime=#{examtime}</if>
+        </where>
+    </select>
+    <!--<resultMap id="examapMap" type="com.cgb.pojo.exercises.ExamAP">-->
+        <!--<id column="id" property="id"></id>-->
+        <!--<result property="examtime" column="examtime"></result>-->
+        <!--<result property="address" column="address"></result>-->
+        <!--<result property="number" column="number"></result>-->
+        <!--<result property="type" column="type"></result>-->
+        <!--<result property="maked" column="maked"></result>-->
+        <!--<collection property="students" javaType="java.util.ArrayList" ofType="com.cgb.pojo.user.Student"-->
+                                                                                                           <!--select="com.cgb.dao.StudentMapper.getStudents" column="{studentid=sid}" />-->
+    <!--</resultMap>-->
+    <!--<select id="getExamAP" parameterType="map" resultMap="examapMap">-->
+        <!--select e.id,e.examtime,e.address,e.number,e.type,e.maked,-->
+        <!--s.id sid,s.name sname-->
+
+        <!--from (examap e left join ksmd k on e.id=k.exid) left join student s on k.sid=s.id-->
+        <!--<where>-->
+            <!--<if test="type!=null">and type =#{type}</if>-->
+            <!--<if test="examtime!=null">and examtime=#{examtime}</if>-->
+            <!--<if test="eid!=null">and id=#{eid}</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <insert id="addexmd" useGeneratedKeys="true" keyProperty="id" parameterType="map">
+        insert into ksmd(sid, exid)
+        values (#{sid},#{eid})
+    </insert>
+</mapper>

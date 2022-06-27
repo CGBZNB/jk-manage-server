@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cgb.dao.AdminMapper">
+    <resultMap id="roleMap" type="role">
+        <id property="id" column="r_id"></id>
+        <result property="name" column="rname"></result>
+
+
+    </resultMap>
+    <resultMap id="userLoginMap" type="userLogin">
+        <id property="id" column="u_id"></id>
+        <result column="uname" property="name"></result>
+        <result column="account" property="account"></result>
+        <association property="role" javaType="role" column="r_id" resultMap="roleMap"></association>
+    </resultMap>
+    <resultMap id="adminMap" type="admin">
+        <id column="id" property="id"></id>
+        <result column="aname" property="name"></result>
+        <result column="phone" property="phone"></result>
+        <association property="userLogin" javaType="userLogin" column="u_id" resultMap="userLoginMap">
+        </association>
+    </resultMap>
+
+    <select id="getAdmis" parameterType="map" resultMap="adminMap">
+        select  a.id,a.NAME aname,a.phone,r.name rname,u.id u_id,r.id r_id ,r.name rname,u.name uname,u.account
+        from user_login u , admin a,role r
+        where u.id=a.l_id and u.r_id=r.id and r.id BETWEEN 2 AND 3
+    </select>
+</mapper>

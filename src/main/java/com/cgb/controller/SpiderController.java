@@ -40,7 +40,7 @@ public class SpiderController {
     @ResponseBody
     public  void spilder(){
         //爬虫怕的数量不需要太多，够用就行
-        for(int i=2323;i<2324;i++) {
+        for(int i=1;i<100;i++) {
             int type = 1;//题目类型
             SubjectItem subjectItem = new SubjectItem();
             String iamgeUrl;
@@ -74,7 +74,7 @@ public class SpiderController {
                 //判断题
                 subjectItem.setContent(li.get(0).html());
                 subjectItem.setChoiceA(li.get(1).html());
-                subjectItem.setChoiceC(li.get(2).html());
+                subjectItem.setChoiceB(li.get(2).html());
                 subjectItem.setAnswer(li.select("strong").html());
                 subjectItem.setTopicType(TopicType.Judgement);
             }

@@ -4,7 +4,7 @@ package com.cgb.pojo;
  * @Author CGB
  * @Date 2022/3/17 21:47
  */
-public enum TopicType{
+public enum TopicType implements BaseEnum{
     SingleChoice(0,"单选题"),
     MultipleChoice(1,"多选题"),
     Judgement(3,"判断题");

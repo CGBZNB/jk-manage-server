@@ -1,7 +1,7 @@
 package com.cgb.service.impl;
 
 import com.cgb.dao.UserMapper;
-import com.cgb.pojo.user.UserLogin;
+import com.cgb.pojo.user.*;
 import com.cgb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,43 @@ public class UserServiceImpl implements UserService {
     @Override
     public int isHaveUser(Map<String, Object> params) {
         return userMapper.isHaveUser(params);
+    }
+
+    @Override
+    public UserLogin getUserLogin(Map<String, Object> params) {
+
+    return userMapper.getUserLogin(params);
+    }
+
+
+    @Override
+    public Student getStudet(int id) {
+        return userMapper.getStudet(id);
+    }
+
+    @Override
+    public Teacher getTeacher(int id) {
+        return userMapper.getTeacher(id);
+    }
+
+    @Override
+    public School getSchool(int id) {
+        return userMapper.getSchool(id);
+    }
+
+    @Override
+    public Admin getAdmin(int id) {
+        return userMapper.getAdmin(id);
+    }
+
+    @Override
+    public int updatePass(Map<String, Object> params) {
+        return userMapper.updateUser(params);
+    }
+
+    @Override
+    public int updateUser(Map<String, Object> params) {
+        return userMapper.updateUser(params);
     }
 
 

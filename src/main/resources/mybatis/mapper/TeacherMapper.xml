@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cgb.dao.TeacherMapper">
+    <resultMap id="roleMap" type="role">
+        <id property="id" column="r_id"></id>
+        <result property="name" column="rname"></result>
+    </resultMap>
+    <resultMap id="schoolMap" type="school">
+    <id property="id" column="sid"></id>
+        <result property="name" column="sname"></result></resultMap>
+    <resultMap id="userLoginMap" type="userLogin">
+        <id property="id" column="u_id"></id>
+        <result column="uname" property="name"></result>
+        <result column="account" property="account"></result>
+        <association property="role" javaType="role" column="r_id" resultMap="roleMap"></association>
+    </resultMap>
+    <resultMap id="teacherMap" type="teacher">
+        <id column="id" property="id"></id>
+        <result column="tname" property="name"></result>
+        <result column="phone" property="phone"></result>
+        <result column="introduce" property="introduce"></result>
+        <result column="id_card" property="idCard"></result>
+        <result column="sex" property="sex" jdbcType="INTEGER"  typeHandler="com.cgb.utils.EnumTypeHandler"></result>
+        <result column="age" property="age"></result>
+        <association property="userLogin" javaType="userLogin" column="u_id" resultMap="userLoginMap">
+        </association>
+        <association property="school" javaType="school" column="sid" resultMap="schoolMap">
+        </association>
+        <collection property="students" javaType="java.util.ArrayList" ofType="com.cgb.pojo.user.Student"
+                    select="com.cgb.dao.StudentMapper.getStudents" column="{tid=id}" />
+
+    </resultMap>
+    <select id="getTeachers" parameterType="map" resultMap="teacherMap">
+        select  t.id,t.NAME tname,t.phone,t.introduce,t.id_card,t.sex,t.age,r.name rname,u.id uid,
+          r.id rid, s.id sid,s.NAME sname,u.name uname,u.account
+        from user_login u , teacher t,role r,school s
+        <where>
+            u.id=t.l_id and u.r_id=r.id and t.s_id=s.id and r.id=5
+            <if test="sid!=null">and s.id=#{sid}</if>
+            <if test="flag!=null">and t.flag=#{flag}</if>
+        </where>
+    </select>
+
+    <insert id="addTeacher" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+    insert into teacher(NAME, phone, introduce, id_card, sex, age, l_id, s_id)
+    values (#{name},#{phone},#{introduce},#{idCard},#{sex},#{age},#{uid},#{school})
+    </insert>
+
+    <update id="rzTeacher" parameterType="map" >
+        update teacher set flag=1 where id=#{tid}
+    </update>
+
+    <update id="deleteTeacher" parameterType="map" >
+        update teacher set is_deleted=1 where id=#{tid}
+    </update>
+
+</mapper>

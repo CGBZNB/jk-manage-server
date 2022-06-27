@@ -32,6 +32,9 @@ public class SubjectItem {
     private TopicType topicType;
     private String imgStr;
     private int imaged;
+    private int flag;
+    private String myAnswer;
+    private boolean liked;
     private List<Comment> comments;
     private Date createTime;
     private Date updateTime;

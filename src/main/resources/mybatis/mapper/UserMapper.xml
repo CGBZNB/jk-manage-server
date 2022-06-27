@@ -28,7 +28,7 @@
         <association property="role" javaType="role" column="r_id" resultMap="roleMap">
         </association>
     </resultMap>
-    <select id="isHaveUser1" parameterType="map" resultMap="userLoginMap">
+    <select id="getUserLogin" parameterType="map" resultMap="userLoginMap">
         select  u.id,u.name,u.account,u.password,u.email,u.create_time,u.update_time,u.is_deleted,
                 u.r_id 'r_id',r.name 'r_name',r.create_time 'r_create',r.update_time 'r_update',r.is_deleted 'r_delete'
         from user_login u inner join role r on u.r_id = r.id
@@ -48,5 +48,35 @@
         </where>
     </select>
 
+    <select id="getStudet" parameterType="int" resultType="student">
+        select s.id,s.NAME
+        from user_login u inner join student s
+        on u.id=s.l_id where u.id=#{id}
 
-</mapper>
+    </select>
+    <select id="getSchool" parameterType="int" resultType="school">
+        select s.id,s.NAME
+        from user_login u inner join school s
+        on u.id=s.l_id where u.id=#{id}
+
+    </select>
+    <select id="getTeacher" parameterType="int" resultType="teacher">
+        select s.id,s.NAME
+        from user_login u inner join teacher s
+        on u.id=s.l_id where u.id=#{id}
+
+    </select>
+    <select id="getAdmin" parameterType="int" resultType="admin">
+        select s.id,s.NAME
+        from user_login u inner join admin s
+        on u.id=s.l_id where u.id=#{id}
+
+    </select>
+    <update id="updateUser" parameterType="map">
+        update user_login set r_id=#{rid} where id=#{uid}
+    </update>
+
+    <update id="updatePass" parameterType="map">
+        update user_login set password=#{pass} where id=#{uid}
+    </update>
+        </mapper>

@@ -25,6 +25,7 @@ public class Student {
     private String imgUrl;
     private int age;
     private String idCard;
+    private UserLogin userLogin;
     private School school;
     private Teacher teacher;
     private Date createTime;

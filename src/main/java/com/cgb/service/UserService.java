@@ -1,6 +1,6 @@
 package com.cgb.service;
 
-import com.cgb.pojo.user.UserLogin;
+import com.cgb.pojo.user.*;
 
 import java.util.Map;
 
@@ -12,4 +12,11 @@ public interface UserService {
 
     public int addUser(UserLogin userLogin);
     public int isHaveUser(Map<String,Object> params);
+    public UserLogin getUserLogin(Map<String,Object> params);
+    public Student getStudet(int id);
+    public Teacher getTeacher(int id);
+    public School getSchool(int id);
+    public Admin getAdmin(int id);
+    public int updatePass(Map<String,Object> params);
+    public int updateUser(Map<String,Object> params);
 }

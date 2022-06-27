@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cgb.dao.SchoolMapper">
+    <resultMap id="roleMap" type="role">
+        <id property="id" column="r_id"></id>
+        <result property="name" column="rname"></result>
+
+
+    </resultMap>
+    <resultMap id="userLoginMap" type="userLogin">
+        <id property="id" column="u_id"></id>
+        <result column="uname" property="name"></result>
+        <result column="account" property="account"></result>
+        <association property="role" javaType="role" column="r_id" resultMap="roleMap"></association>
+    </resultMap>
+    <resultMap id="schoolMap" type="school">
+        <id column="id" property="id"></id>
+        <result column="sname" property="name"></result>
+        <result column="phone" property="phone"></result>
+        <result column="address" property="address"></result>
+        <result column="introduce" property="introduce"></result>
+        <result column="age" property="age"></result>
+        <result column="price" property="price"></result>
+        <association property="userLogin" javaType="userLogin" column="u_id" resultMap="userLoginMap">
+        </association>
+        <collection property="teachers" javaType="java.util.ArrayList" ofType="com.cgb.pojo.user.Teacher"
+                    select="com.cgb.dao.TeacherMapper.getTeachers" column="{sid=id}" />
+       </resultMap>
+
+    <select id="getSchools" parameterType="map" resultMap="schoolMap">
+        select  s.id,s.NAME sname,s.phone,s.address,s.introduce,s.age,s.price,r.name rname,u.id u_id,r.id r_id,u.name uname,u.account
+        from user_login u , school s ,role r
+        <where>
+            u.id=s.l_id and u.r_id=r.id and r.id=6
+            <if test="sid!=null">and s.id=#{sid}</if>
+            <if test="flag!=null">and s.flag=#{flag}</if>
+        </where>
+    </select>
+
+    <insert id="addSchool" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+   insert into school(NAME, phone, price, introduce, address, age,  l_id)
+    values (#{name},#{phone},#{price},#{introduce},#{address},#{age},#{uid})
+    </insert>
+
+    <update id="rzSchool" parameterType="map" >
+        update school set flag=1 where id=#{sid}
+    </update>
+
+    <update id="deleteSchool" parameterType="map" >
+        update school set is_deleted=1 where id=#{sid}
+    </update>
+</mapper>

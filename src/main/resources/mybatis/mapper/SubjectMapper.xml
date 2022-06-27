@@ -24,11 +24,75 @@
         <result column="create_time" property="createTime"></result>
         <result column="update_time" property="updateTime"></result>
         <result column="is_deleted" property="deleted"></result>
-        <result column="subject" property="subject" typeHandler="com.cgb.utils.EnumSubjectHandler"></result>
+        <result column="subject" jdbcType="INTEGER" property="subject" typeHandler="com.cgb.utils.EnumTypeHandler"></result>
 
     </resultMap>
     <select id="getTitleChapter" parameterType="titleChapter" resultMap="chapterMap">
         select id,name,count,subject,create_time,update_time,is_deleted
         from title_chapter where name=#{name}
     </select>
+    <select id="getTitleChapters" parameterType="titleChapter" resultMap="chapterMap">
+        select id,name,count,subject,create_time,update_time,is_deleted
+        from title_chapter
+    </select>
+
+    <resultMap id="subjectMap" type="subjectItem">
+        <id property="id" column="id"></id>
+        <result property="content" column="content"></result>
+        <result property="choiceA" column="choice_A"></result>
+        <result property="choiceB" column="choice_B"></result>
+        <result property="choiceC" column="choice_C"></result>
+        <result property="choiceD" column="choice_D"></result>
+        <result property="answer" column="answer"></result>
+        <result property="explain" column="explain"></result>
+        <result property="difficultLevel" column="diffucult_level"></result>
+        <result property="imgStr" column="img_str"></result>
+        <result property="imaged" column="is_image"></result>
+        <result property="topicType" column="topic_type" jdbcType="INTEGER"  typeHandler="com.cgb.utils.EnumTypeHandler"></result>
+        <association property="titleChapter" javaType="titleChapter" column="chapter_id" resultMap="chapterMap">
+        </association>
+    </resultMap>
+    <select id="getSubjectItems" resultMap="subjectMap" parameterType="map">
+       select s.id,s.content,s.choice_A,s.choice_B,s.choice_C,s.choice_D,s.answer,s.explain,
+            s.diffucult_level,s.img_str,s.is_image,s.topic_type,
+            c.id chapter_id,c.name,c.count,c.subject
+        from subject_item s inner join title_chapter c  on s.c_id=c.id
+        <where>
+            s.is_deleted=0
+            <if test="km!=null">and c.subject=#{km}</if>
+            <if test="type!=null">and s.topic_type=#{type}</if>
+            <if test="chapter!=null">and s.c_id=#{chapter}</if>
+            <if test="image!=null">and s.is_image=${image}</if>
+        </where>
+    </select>
+
+    <select id="getExamItems" resultMap="subjectMap" parameterType="map">
+        select s.id,s.content,s.choice_A,s.choice_B,s.choice_C,s.choice_D,s.answer,s.explain,
+        s.diffucult_level,s.img_str,s.is_image,s.topic_type,
+        c.id chapter_id,c.name,c.count,c.subject
+        from subject_item s inner join title_chapter c  on s.c_id=c.id
+        <where>
+            s.is_deleted=0
+            <if test="km!=null">and c.subject=#{km} </if>
+            <if test="type==0">and s.topic_type=#{type} order by RAND() limit 60</if>
+            <if test="type==3">and s.topic_type=#{type} order by RAND() limit 40</if>
+        </where>
+    </select>
+    <insert id="addScSubjct" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        insert into sc_subject(s_id, l_id, flag)
+        VALUES(#{sid},#{uid},#{flag})
+    </insert>
+    <select id="getScCount" parameterType="map" resultType="int">
+        select count(*)
+        from sc_subject
+        where l_id=#{uid} and s_id=#{sid} and flag=#{flag}
+    </select>
+
+ <select id="getScSubjct" parameterType="map" resultMap="subjectMap">
+ select s.id,s.content,s.choice_A,s.choice_B,s.choice_C,s.choice_D,s.answer,s.explain,
+            s.diffucult_level,s.img_str,s.is_image,s.topic_type
+        from subject_item s, sc_subject sc
+        where s.id=sc.s_id and sc.l_id=#{uid} and flag=#{flag}
+ </select>
+
 </mapper>

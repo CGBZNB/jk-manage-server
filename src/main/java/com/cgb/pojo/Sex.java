@@ -6,7 +6,7 @@ import lombok.Data;
  * @Author CGB
  * @Date 2022/3/17 21:30
  */
-public enum Sex {
+public enum Sex implements BaseEnum{
 
     Female(0,"女"),
     Male(1,"男");
